@@ -1,40 +1,36 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import React from 'react'
 import Home from './pages/Home'
-import About from './pages/About'
-
+import TicketList from './pages/TicketList'
 import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
-import CreatePost from './pages/CreatePost'
-import Projects from './pages/Projects'
 import SignIn from './pages/SignIn'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
-import UpdatePost from './pages/UpdatePost'
 import PostPage from './pages/PostPage'
-import ScrollToTop from './components/ScrollToTop';
-import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute'
+import OnlyUserPrivateRoute from './components/OnlyUserPrivateRoute'
 
 export default function App() {
   return (
     <BrowserRouter>
-    <ScrollToTop />
+    
     <Header/>
     <Routes>
-      <Route path='/' element={<Home/>}/>
-      <Route path='/about' element={<About/>}/>
+     
       <Route path='/sign-in' element={<SignIn/>}/>
       <Route path='/sign-up' element={<SignUp/>}/>
+
       <Route element={<PrivateRoute/>}>
+        <Route path='/ticketList' element={<TicketList/>}/> 
         <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/ticket/:postSlug' element={<PostPage/>}/>
       </Route>
-      <Route element={<OnlyAdminPrivateRoute/>}>
-        <Route path='/create-post' element={<CreatePost/>}/>
-        <Route path='/update-post/:postId' element={<UpdatePost />} />
+
+      <Route element={<OnlyUserPrivateRoute/>}>
+        <Route path='/' element={<Home/>}/>
       </Route>
-      <Route path='/projects' element={<Projects/>}/>
-      <Route path='/post/:postSlug' element={<PostPage/>}/>
+
       </Routes>
       <Footer/>
       </BrowserRouter>
