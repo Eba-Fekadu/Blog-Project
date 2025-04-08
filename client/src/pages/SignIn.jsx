@@ -9,12 +9,10 @@ import {
   signInFailure,
 } from '../redux/user/userSlice';
 
-import OAuth from '../components/OAuth';
+
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  // const [errorMessage, setErrorMessage] = useState('');
-  // const [loading, setLoading] = useState('');
    const { loading, error: errorMessage } = useSelector((state) => state.user);
    const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,12 +22,10 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      // return setErrorMessage('Please fill all the fields')
       return dispatch(signInFailure('Please fill all the fields'));
     }
     try {
       dispatch(signInStart());
-      // setErrorMessage(null)
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,37 +33,32 @@ export default function SignIn() {
       });
       const data = await res.json();
       if (data.success === false) {
-        // setErrorMessage(data.message)
          dispatch(signInFailure(data.message));
       }
 
       if (res.ok) {
          dispatch(signInSuccess(data));
-        // setLoading(data)
         navigate('/');
       }
     } catch (error) {
        dispatch(signInFailure(error.message));
-      // setErrorMessage(error.message)
     }
   };
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
-        {/* left */}
+       
         <div className='flex-1'>
           <Link to='/' className='font-bold dark:text-white text-4xl'>
-            <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-              Blog
+            <span className="px-2 py-1 bg-gradient-to-r from-blue-500 via-teal-400 to-green-500 rounded-lg text-white">
+              Ticketing
             </span>
-            Project
+            System
           </Link>
           <p className='text-sm mt-5'>
-            This is a demo project. You can sign in with your email and password
-            or with Google.
+            This is a demo project. You can sign in with your email and password.
           </p>
         </div>
-        {/* right */}
 
         <div className='flex-1'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
@@ -90,7 +81,7 @@ export default function SignIn() {
               />
             </div>
             <Button
-              gradientDuoTone='purpleToPink'
+              gradientDuoTone='greenToBlue'
               type='submit'
               disabled={loading}
             >
@@ -103,7 +94,7 @@ export default function SignIn() {
                 'Sign In'
               )}
             </Button>
-            <OAuth />
+            {/* <OAuth /> */}
           </form>
           <div className='flex gap-2 text-sm mt-5'>
             <span>Dont Have an account?</span>
