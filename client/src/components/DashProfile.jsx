@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, ModalBody, TextInput } from 'flowbite-react';
+import { Alert, Button, Modal,  TextInput } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -21,7 +21,6 @@ import {
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
 
 export default function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -50,16 +49,7 @@ export default function DashProfile() {
   }, [imageFile]);
 
   const uploadImage = async () => {
-    // service firebase.storage {
-    //   match /b/{bucket}/o {
-    //     match /{allPaths=**} {
-    //       allow read;
-    //       allow write: if
-    //       request.resource.size < 2 * 1024 * 1024 &&
-    //       request.resource.contentType.matches('image/.*')
-    //     }
-    //   }
-    // }
+   
     setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
@@ -235,23 +225,13 @@ export default function DashProfile() {
         />
         <Button
           type='submit'
-          gradientDuoTone='purpleToBlue'
+          gradientDuoTone='greenToBlue'
           outline
           disabled={loading || imageFileUploading}
         >
           {loading ? 'Loading...' : 'Update'}
         </Button>
-        {currentUser.isAdmin && (
-          <Link to={'/create-post'}>
-            <Button
-              type='button'
-              gradientDuoTone='purpleToPink'
-              className='w-full'
-            >
-              Create a post
-            </Button>
-          </Link>
-        )}
+        
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
@@ -291,7 +271,7 @@ export default function DashProfile() {
             </h3>
             <div className='flex justify-center gap-4'>
               <Button color='failure' onClick={handleDeleteUser}>
-                Yes, I'm sure
+              Yes, I&apos;m sure
               </Button>
               <Button color='gray' onClick={() => setShowModal(false)}>
                 No, cancel

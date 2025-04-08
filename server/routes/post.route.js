@@ -1,12 +1,11 @@
 import express from 'express'
-import { createPost, getposts, deletepost, updatepost} from '../controllers/post.controller.js'
+import { createTicket, getTickets, updateTicket} from '../controllers/post.controller.js'
 import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
 
-router.post('/create-post', verifyToken, createPost)
-router.get('/getposts', getposts)
-router.delete('/deletepost/:postId/:userId', verifyToken, deletepost)
-router.put('/updatepost/:postId/:userId', verifyToken, updatepost)
+router.post('/createTicket', verifyToken, createTicket)
+router.get('/getTickets', getTickets)
+router.put('/updateTicket/:postId/:userId', verifyToken, updateTicket)
 
 export default router

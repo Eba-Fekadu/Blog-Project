@@ -19,9 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default:"https://cropconex.com/wp-content/plugins/buddyboss-platform/bp-core/images/profile-avatar-buddyboss.png",
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
     }
 },{timestamps: true})
 

@@ -1,56 +1,83 @@
-import { Link } from 'react-router-dom';
-import CallToAction from '../components/CallToAction';
-import { useEffect, useState } from 'react';
-import PostCard from '../components/PostCard';
+import { Alert, Button, TextInput } from 'flowbite-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { useState } from 'react';
+import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
-  const [posts, setPosts] = useState([]);
+  
+  const [formData, setFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await fetch('/api/post/getPosts');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/post/createTicket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
-      setPosts(data.posts);
-    };
-    fetchPosts();
-  }, []);
-  return (
-    <div>
-      <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto '>
-        <h1 className='text-3xl font-bold lg:text-6xl'>Welcome to my Blog</h1>
-        <p className='text-gray-500 text-xs sm:text-sm'>
-          Here you'll find a variety of articles and tutorials on topics such as
-          web development, software engineering, and programming languages.
-        </p>
-        <Link
-          to='/search'
-          className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'
-        >
-          View all posts
-        </Link>
-      </div>
-      <div className='p-3 bg-amber-100 dark:bg-slate-700'>
-        <CallToAction />
-      </div>
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
 
-      <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7'>
-        {posts && posts.length > 0 && (
-          <div className='flex flex-col gap-6'>
-            <h2 className='text-2xl font-semibold text-center'>Recent Posts</h2>
-            <div className='flex flex-wrap gap-4'>
-              {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
-              ))}
-            </div>
-            <Link
-              to={'/search'}
-              className='text-lg text-teal-500 hover:underline text-center'
-            >
-              View all posts
-            </Link>
-          </div>
-        )}
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/ticket/${data.slug}`);
+      }
+    } catch (error) {
+      setPublishError('Something went wrong');
+    }
+  };
+  return (
+    <div className='p-3 max-w-3xl mx-auto min-h-screen'>
+    <h1 className='text-center text-3xl my-7 font-semibold'>Create a ticket</h1>
+    <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+      <div className='flex flex-col gap-4 sm:flex-row justify-between'>
+        <TextInput
+          type='text'
+          placeholder='Title'
+          required
+          id='title'
+          className='flex-1'
+          onChange={(e) =>
+            setFormData({ ...formData, title: e.target.value })
+          }
+        />
+       
       </div>
-    </div>
+      
+      {formData.image && (
+        <img
+          src={formData.image}
+          alt='upload'
+          className='w-full h-72 object-cover'
+        />
+      )}
+      <ReactQuill
+        theme='snow'
+        placeholder='Write something...'
+        className='h-72 mb-12'
+        required
+        onChange={(value) => {
+          setFormData({ ...formData, content: value });
+        }}
+      />
+      <Button type='submit' gradientDuoTone='greenToBlue'>
+        Add
+      </Button>
+      {publishError && (
+        <Alert className='mt-5' color='failure'>
+          {publishError}
+        </Alert>
+      )}
+    </form>
+  </div>
   );
 }
